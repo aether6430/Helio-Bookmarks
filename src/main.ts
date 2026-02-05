@@ -2,6 +2,7 @@ import { stat } from "node:fs/promises";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { startServer } from "./server";
+import { embeddedBundle } from "./lib/embedded-bundle";
 
 const help = () => {
   const text = `\nHelio Bookmark Manager\n\nUsage:\n  helio tui            Run the TUI\n  helio gui            Serve the GUI (requires ./dist)\n  helio gui --dev      Run GUI with Vite dev server (requires repo)\n  helio api            Run API server only\n\nNotes:\n  Build the GUI assets with: bun run build\n  Default API port: 5174 (override with BM_PORT)\n`;
@@ -71,7 +72,8 @@ const run = async () => {
       }
     }
     const hasDist = Boolean(distDir);
-    const hasEmbedded = (Bun.embeddedFiles?.length ?? 0) > 0;
+    const hasEmbedded =
+      (Bun.embeddedFiles?.length ?? 0) > 0 || Boolean(embeddedBundle?.files);
     if (debugPaths) {
       console.log(
         [

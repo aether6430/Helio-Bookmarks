@@ -23,7 +23,7 @@ const getMimeType = (path: string) => {
 };
 
 const distDir = resolve(process.cwd(), "dist");
-const outFile = resolve(process.cwd(), "dist.bundle.json");
+const outFile = resolve(process.cwd(), "src/lib/embedded-bundle.ts");
 
 const walk = async (dir: string): Promise<string[]> => {
   const entries = await readdir(dir, { withFileTypes: true });
@@ -63,7 +63,10 @@ const run = async () => {
   }
 
   const payload = { version: 1, files };
-  await writeFile(outFile, JSON.stringify(payload));
+  const output =
+    "export type EmbeddedBundle = { version: number; files: Record<string, { type?: string; data: string }>; };\n" +
+    `export const embeddedBundle: EmbeddedBundle = ${JSON.stringify(payload)};\n`;
+  await writeFile(outFile, output);
   console.log(`Wrote ${Object.keys(files).length} files to ${outFile}`);
 };
 

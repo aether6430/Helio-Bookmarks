@@ -8,7 +8,7 @@
     "server": "bun run src/server.ts",
     "tui": "bun run src/tui.tsx",
     "build:embed": "bun run scripts/build-embed.ts",
-    "build:helio": "bun run build && bun run build:embed && bun build --compile --minify --sourcemap --asset-naming=\"[name].[ext]\" ./src/main.ts ./dist.bundle.json --outfile helio",
+    "build:helio": "bun run build && bun run build:embed && bun build --compile --minify --sourcemap --asset-naming=\"[name].[ext]\" ./src/main.ts --outfile helio",
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview"

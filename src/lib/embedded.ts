@@ -49,6 +49,8 @@ const normalizeEmbeddedCandidates = (name: string) => {
   );
 };
 
+import { embeddedBundle } from "./embedded-bundle";
+
 type EmbeddedEntry = {
   file: Blob | Uint8Array;
   name: string;
@@ -82,39 +84,25 @@ const getEmbeddedIndex = () => {
 
 const getBundleIndex = async () => {
   if (bundleIndex) return bundleIndex;
-  if (!Bun.embeddedFiles || Bun.embeddedFiles.length === 0) return null;
+  const payload = embeddedBundle;
+  if (!payload?.files) return null;
 
-  const bundleFile = Bun.embeddedFiles.find((file) =>
-    normalizeEmbeddedCandidates(file.name).includes("dist.bundle.json")
-  );
-  if (!bundleFile) return null;
-
-  try {
-    const text = await bundleFile.text();
-    const payload = JSON.parse(text) as {
-      files?: Record<string, { type?: string; data: string }>;
-    };
-    if (!payload.files) return null;
-
-    const index = new Map<string, EmbeddedEntry>();
-    for (const [name, entry] of Object.entries(payload.files)) {
-      const data = Buffer.from(entry.data, "base64");
-      const type = entry.type || getMimeType(name);
-      const embeddedEntry = { file: data, name, type };
-      index.set(name, embeddedEntry);
-      index.set(normalizeHashedName(name), embeddedEntry);
-      const basename = name.split("/").pop();
-      if (basename) {
-        index.set(basename, embeddedEntry);
-        index.set(normalizeHashedName(basename), embeddedEntry);
-      }
+  const index = new Map<string, EmbeddedEntry>();
+  for (const [name, entry] of Object.entries(payload.files)) {
+    const data = Buffer.from(entry.data, "base64");
+    const type = entry.type || getMimeType(name);
+    const embeddedEntry = { file: data, name, type };
+    index.set(name, embeddedEntry);
+    index.set(normalizeHashedName(name), embeddedEntry);
+    const basename = name.split("/").pop();
+    if (basename) {
+      index.set(basename, embeddedEntry);
+      index.set(normalizeHashedName(basename), embeddedEntry);
     }
-
-    bundleIndex = index;
-    return bundleIndex;
-  } catch {
-    return null;
   }
+
+  bundleIndex = index;
+  return bundleIndex;
 };
 
 export const getEmbeddedFile = async (
