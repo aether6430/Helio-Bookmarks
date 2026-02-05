@@ -1,0 +1,32 @@
+{
+  "name": "helio",
+  "module": "index.ts",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "start": "bun run src/main.ts",
+    "server": "bun run src/server.ts",
+    "tui": "bun run src/tui.tsx",
+    "build:helio": "bun run build && bun build --compile --minify --sourcemap --asset-naming=\"[name].[ext]\" ./src/main.ts ./dist/index.html ./dist/assets/* --outfile helio",
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "@types/bun": "latest",
+    "@types/react": "^18.2.55",
+    "autoprefixer": "^10.4.20",
+    "postcss": "^8.5.1",
+    "tailwindcss": "^3.4.17",
+    "vite": "^6.1.0"
+  },
+  "dependencies": {
+    "ink": "^5.0.0",
+    "ink-select-input": "^5.0.0",
+    "ink-text-input": "^6.0.0",
+    "react": "^18.2.0"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  }
+}
