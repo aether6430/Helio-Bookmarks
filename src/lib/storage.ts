@@ -1,8 +1,29 @@
 import { mkdir, readFile, writeFile } from "node:fs/promises";
+import { homedir } from "node:os";
 import { dirname, resolve } from "node:path";
 import type { Bookmark, BookmarkInput, BookmarkStore, BookmarkUpdate } from "./types";
 
-const DATA_PATH = resolve(process.cwd(), "data", "bookmarks.json");
+const resolveDataDir = () => {
+  if (process.platform === "win32") {
+    const appData = process.env.APPDATA ?? resolve(homedir(), "AppData", "Roaming");
+    return resolve(appData, "helio");
+  }
+
+  if (process.platform === "darwin") {
+    return resolve(homedir(), "Library", "Application Support", "helio");
+  }
+
+  const xdgData = process.env.XDG_DATA_HOME;
+  if (xdgData) {
+    return resolve(xdgData, "helio");
+  }
+
+  return resolve(homedir(), ".local", "share", "helio");
+};
+
+const DATA_PATH = resolve(resolveDataDir(), "bookmarks.json");
+
+export const getDataPath = () => DATA_PATH;
 
 const emptyStore: BookmarkStore = {
   version: 1,

@@ -5,6 +5,7 @@ import TextInput from "ink-text-input";
 import {
   createBookmark,
   deleteBookmark,
+  getDataPath,
   listBookmarks,
   updateBookmark,
 } from "./lib/storage";
@@ -308,7 +309,7 @@ const App = () => {
     <Box flexDirection="column" gap={1} padding={1}>
       <Box borderStyle="round" borderColor="cyan" padding={1} flexDirection="column">
         <Text>Bookmark TUI</Text>
-        <Text color="gray">Data: data/bookmarks.json</Text>
+        <Text color="gray">Data: {getDataPath()}</Text>
       </Box>
 
       <Box flexDirection="row" gap={1}>

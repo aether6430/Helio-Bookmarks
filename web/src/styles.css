@@ -3,11 +3,147 @@
 @tailwind utilities;
 
 :root {
-  color-scheme: light;
+  color-scheme: dark;
+  --background: oklch(0.1591 0.0064 91.6908);
+  --foreground: oklch(0.9199 0.0035 67.7804);
+  --card: oklch(0.1912 0.0061 91.6557);
+  --card-foreground: oklch(0.9851 0 0);
+  --popover: oklch(0.1912 0.0061 91.6557);
+  --popover-foreground: oklch(0.9851 0 0);
+  --primary: oklch(0.5655 0.0552 259.6915);
+  --primary-foreground: oklch(0 0 0);
+  --secondary: oklch(0.2404 0.0064 78.2033);
+  --secondary-foreground: oklch(0.9851 0 0);
+  --muted: oklch(0.2404 0.0064 78.2033);
+  --muted-foreground: oklch(0.6995 0.0031 84.5627);
+  --accent: oklch(0.2404 0.0064 78.2033);
+  --accent-foreground: oklch(0.9851 0 0);
+  --destructive: oklch(0.3912 0.0831 21.6174);
+  --destructive-foreground: oklch(0.9756 0.0075 17.2856);
+  --border: oklch(0.2404 0.0064 78.2033);
+  --input: oklch(0.2404 0.0064 78.2033);
+  --ring: oklch(0.8736 0.0027 286.3433);
+  --chart-1: oklch(0.6503 0.1507 34.8901);
+  --chart-2: oklch(0.7506 0.1198 79.7585);
+  --chart-3: oklch(0.5003 0.0797 44.8466);
+  --chart-4: oklch(0.5655 0.0552 259.6915);
+  --chart-5: oklch(0.8001 0.0495 90.0775);
+  --sidebar: oklch(0.1591 0.0064 91.6908);
+  --sidebar-foreground: oklch(0.9674 0.0013 286.3752);
+  --sidebar-primary: oklch(0.5870 0.0273 259.8053);
+  --sidebar-primary-foreground: oklch(1.0000 0 0);
+  --sidebar-accent: oklch(0.2404 0.0064 78.2033);
+  --sidebar-accent-foreground: oklch(0.9674 0.0013 286.3752);
+  --sidebar-border: oklch(0.2404 0.0064 78.2033);
+  --sidebar-ring: oklch(0.8736 0.0027 286.3433);
 }
 
 body {
   font-family: "Work Sans", sans-serif;
+  background: radial-gradient(1200px 800px at 20% -10%, oklch(0.24 0.02 91.6) 0%, var(--background) 55%);
+  color: var(--foreground);
+}
+
+a {
+  color: var(--primary);
+}
+
+main,
+section,
+article,
+header,
+footer,
+nav {
+  color: inherit;
+}
+
+article,
+section,
+header,
+footer,
+nav,
+aside,
+main {
+  background-color: var(--card);
+  border-color: var(--border);
+}
+
+input,
+textarea,
+select,
+button {
+  background-color: var(--input);
+  color: var(--foreground);
+  border-color: var(--border);
+}
+
+::placeholder {
+  color: var(--muted-foreground);
+}
+
+.bg-white,
+.bg-ink-50,
+.bg-sand-50 {
+  background-color: var(--card) !important;
+}
+
+.bg-ink-50\/60 {
+  background-color: var(--input) !important;
+}
+
+.bg-ink-900 {
+  background-color: var(--primary) !important;
+  color: var(--primary-foreground) !important;
+}
+
+.text-ink-900 {
+  color: var(--foreground) !important;
+}
+
+.text-ink-700,
+.text-ink-600,
+.text-ink-500 {
+  color: var(--muted-foreground) !important;
+}
+
+.text-moss-400,
+.text-moss-600 {
+  color: var(--primary) !important;
+}
+
+.text-white {
+  color: var(--primary-foreground) !important;
+}
+
+.border-ink-200 {
+  border-color: var(--border) !important;
+}
+
+.bookmark-card {
+  transition: transform 200ms ease, border-color 200ms ease, box-shadow 200ms ease;
+}
+
+.bookmark-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--ring);
+  box-shadow: 0 20px 40px -30px rgba(0, 0, 0, 0.7);
+}
+
+.bookmark-card-details {
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+  transition: max-height 220ms ease, opacity 200ms ease;
+}
+
+.bookmark-card:hover .bookmark-card-details {
+  max-height: 420px;
+  opacity: 1;
+}
+
+.hero-surface {
+  background: linear-gradient(135deg, var(--card), var(--background));
+  border: 1px solid var(--border);
 }
 
 #bookmark-list > article {

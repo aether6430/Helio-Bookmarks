@@ -49,7 +49,14 @@ const normalizeEmbeddedCandidates = (name: string) => {
   );
 };
 
+type EmbeddedEntry = {
+  file: Blob | Uint8Array;
+  name: string;
+  type: string;
+};
+
 let embeddedIndex: Map<string, Blob> | null = null;
+let bundleIndex: Map<string, EmbeddedEntry> | null = null;
 
 const getEmbeddedIndex = () => {
   if (!Bun.embeddedFiles || Bun.embeddedFiles.length === 0) return null;
@@ -73,25 +80,78 @@ const getEmbeddedIndex = () => {
   return embeddedIndex;
 };
 
-export const getEmbeddedFile = (pathname: string) => {
-  const index = getEmbeddedIndex();
-  if (!index) return null;
+const getBundleIndex = async () => {
+  if (bundleIndex) return bundleIndex;
+  if (!Bun.embeddedFiles || Bun.embeddedFiles.length === 0) return null;
+
+  const bundleFile = Bun.embeddedFiles.find((file) =>
+    normalizeEmbeddedCandidates(file.name).includes("dist.bundle.json")
+  );
+  if (!bundleFile) return null;
+
+  try {
+    const text = await bundleFile.text();
+    const payload = JSON.parse(text) as {
+      files?: Record<string, { type?: string; data: string }>;
+    };
+    if (!payload.files) return null;
+
+    const index = new Map<string, EmbeddedEntry>();
+    for (const [name, entry] of Object.entries(payload.files)) {
+      const data = Buffer.from(entry.data, "base64");
+      const type = entry.type || getMimeType(name);
+      const embeddedEntry = { file: data, name, type };
+      index.set(name, embeddedEntry);
+      index.set(normalizeHashedName(name), embeddedEntry);
+      const basename = name.split("/").pop();
+      if (basename) {
+        index.set(basename, embeddedEntry);
+        index.set(normalizeHashedName(basename), embeddedEntry);
+      }
+    }
+
+    bundleIndex = index;
+    return bundleIndex;
+  } catch {
+    return null;
+  }
+};
+
+export const getEmbeddedFile = async (
+  pathname: string
+): Promise<EmbeddedEntry | null> => {
+  const embedded = getEmbeddedIndex();
   const normalized = pathname === "/" ? "index.html" : pathname.slice(1);
   const basename = normalized.split("/").pop();
   const candidates = [normalized, `dist/${normalized}`];
   if (basename) candidates.push(basename);
 
-  for (const candidate of candidates) {
-    const match =
-      index.get(candidate) ??
-      index.get(normalizeHashedName(candidate)) ??
-      null;
-    if (match) {
-      return {
-        file: match,
-        name: candidate,
-        type: match.type || getMimeType(candidate),
-      };
+  if (embedded) {
+    for (const candidate of candidates) {
+      const match =
+        embedded.get(candidate) ??
+        embedded.get(normalizeHashedName(candidate)) ??
+        null;
+      if (match) {
+        return {
+          file: match,
+          name: candidate,
+          type: match.type || getMimeType(candidate),
+        };
+      }
+    }
+  }
+
+  const bundle = await getBundleIndex();
+  if (bundle) {
+    for (const candidate of candidates) {
+      const match =
+        bundle.get(candidate) ??
+        bundle.get(normalizeHashedName(candidate)) ??
+        null;
+      if (match) {
+        return match;
+      }
     }
   }
 

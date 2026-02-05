@@ -16,7 +16,7 @@
     <div class="min-h-screen">
       <header class="px-6 pt-10">
         <div
-          class="mx-auto flex max-w-6xl flex-col gap-6 rounded-3xl bg-gradient-to-br from-sand-50 via-white to-ink-50 p-8 shadow-soft md:p-10"
+          class="hero-surface mx-auto flex max-w-6xl flex-col gap-6 rounded-3xl p-8 shadow-soft md:p-10"
         >
           <div class="flex flex-col gap-3">
             <span class="text-sm font-semibold uppercase tracking-[0.3em] text-moss-400">
@@ -37,7 +37,7 @@
               API on <span class="font-semibold">localhost:5174</span>
             </div>
             <div class="rounded-full border border-ink-200 px-4 py-2">
-              Stores data in <span class="font-semibold">data/bookmarks.json</span>
+              Stores data in your user data directory
             </div>
           </div>
         </div>
@@ -49,12 +49,20 @@
             <div class="rounded-3xl bg-white p-6 shadow-soft">
               <div class="flex items-center justify-between">
                 <h2 class="font-display text-2xl font-semibold">Saved bookmarks</h2>
-                <button
-                  id="refresh"
-                  class="rounded-full border border-ink-200 px-4 py-2 text-sm font-semibold text-ink-700 transition hover:border-ink-500"
-                >
-                  Refresh
-                </button>
+                <div class="flex items-center gap-2">
+                  <a
+                    href="/all.html"
+                    class="rounded-full border border-ink-200 px-4 py-2 text-sm font-semibold text-ink-700 transition hover:border-ink-500"
+                  >
+                    View all
+                  </a>
+                  <button
+                    id="refresh"
+                    class="rounded-full border border-ink-200 px-4 py-2 text-sm font-semibold text-ink-700 transition hover:border-ink-500"
+                  >
+                    Refresh
+                  </button>
+                </div>
               </div>
               <div class="mt-6 flex gap-2">
                 <input

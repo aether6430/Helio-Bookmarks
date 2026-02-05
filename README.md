@@ -47,7 +47,7 @@ bun run server
 bun run dev
 ```
 
-Open `http://localhost:5173` to use the GUI. The data lives in `data/bookmarks.json`.
+Open `http://localhost:5173` to use the GUI. The data lives in your user data directory (for example, `~/.local/share/helio/bookmarks.json` on Linux). For a paginated list view, open `http://localhost:5173/all.html`.
 
 When adding in the GUI, it will fetch page metadata from the URL and prefill fields when available.
 

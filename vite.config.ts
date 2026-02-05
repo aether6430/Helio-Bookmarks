@@ -1,3 +1,4 @@
+import { resolve } from "node:path";
 import { defineConfig } from "vite";
 
 export default defineConfig(({ command }) => ({
@@ -12,5 +13,11 @@ export default defineConfig(({ command }) => ({
   build: {
     outDir: "../dist",
     emptyOutDir: true,
+    rollupOptions: {
+      input: {
+        index: resolve(__dirname, "web/index.html"),
+        all: resolve(__dirname, "web/all.html"),
+      },
+    },
   },
 }));

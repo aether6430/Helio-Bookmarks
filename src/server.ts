@@ -73,8 +73,8 @@ const serveStatic = async (pathname: string, staticDir: string) => {
   return null;
 };
 
-const serveEmbedded = (pathname: string) => {
-  const entry = getEmbeddedFile(pathname);
+const serveEmbedded = async (pathname: string) => {
+  const entry = await getEmbeddedFile(pathname);
   if (!entry) return null;
   return new Response(entry.file, {
     headers: {
@@ -163,7 +163,7 @@ export const startServer = (options: ServerOptions = {}) => {
       }
 
       if (useEmbedded && method === "GET") {
-        const response = serveEmbedded(pathname);
+        const response = await serveEmbedded(pathname);
         if (response) return response;
       }
 

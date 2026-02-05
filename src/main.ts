@@ -47,6 +47,7 @@ const run = async () => {
 
   if (command === "gui") {
     const rootDir = getRootDir();
+    const debugPaths = process.env.HELIO_DEBUG_PATHS;
     const isDev = args.includes("--dev");
     if (isDev) {
       startServer();
@@ -71,6 +72,18 @@ const run = async () => {
     }
     const hasDist = Boolean(distDir);
     const hasEmbedded = (Bun.embeddedFiles?.length ?? 0) > 0;
+    if (debugPaths) {
+      console.log(
+        [
+          `cwd=${process.cwd()}`,
+          `rootDir=${rootDir}`,
+          `distDir=${distDir ?? "none"}`,
+          `hasDist=${hasDist}`,
+          `hasEmbedded=${hasEmbedded}`,
+          `embeddedCount=${Bun.embeddedFiles?.length ?? 0}`,
+        ].join(" ")
+      );
+    }
     if (!hasDist && !hasEmbedded) {
       process.stdout.write(
         "GUI assets missing. Run `bun run build` first to create ./dist.\n"
